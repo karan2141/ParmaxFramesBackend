@@ -4,6 +4,11 @@ import bodyParser from 'body-parser'
 import { User } from './model.js'
 import axios from 'axios'
 import chalk from 'chalk'
+import { generateOTP } from './utils.js'
+import sendMail from './emailService.js'
+import Jwt from 'jsonwebtoken'
+
+const JwtSecret = process.env.SECRET
 
 connectMongoDb()
 
@@ -15,24 +20,62 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.json());
 
-app.get('/',async(req,res) => {
+app.post('/verify-email',async(req,res) => {
     try{
-        const result = await axios({
-            method: 'get',
-            url: 'https://randomuser.me/api/'
-        })
-        const name = result.data.results[0].name.first
-        const email = result.data.results[0].email
-        const user = new User({
-            name,
-            email
-        })
-        await user.save()
+        const { email } = req.body
+        const existing = await User.findOne({ email })
+        const OTP = generateOTP()
+        if(!existing) {
+            const user = new User({
+                email,
+                OTP
+            })
+            await user.save()
+        } else {
+            await User.updateOne({email}, {OTP})
+        }
+        sendMail({ to: email, OTP })
         res.send({
             status: 200,
-            message: 'Success'
+            message: 'Otp sent successfully'
         })
     } catch(e) {
+        console.log(e);
+        res.statusMessage = "Something went wrong";
+        res.status(500).end();
+    }
+})
+
+app.post('/verify-otp', async(req,res)=>{
+    try {
+        const { email, OTP } = req.body
+        const existing = await User.findOne({ email })
+        if (existing) {
+            if (existing.OTP === OTP) {
+                const token = Jwt.sign({ email,  }, JwtSecret, {
+                    expiresIn: "6000s"
+                });
+                res.send({
+                    status: 200,
+                    message: 'Otp verified successfully',
+                    data: {
+                        token
+                    }
+                })
+            } else {
+                res.send({
+                    status: 401,
+                    message: 'Unauthorized'
+                })
+            }
+        } else {
+            res.send({
+                status: 404,
+                message: 'Email does not exists'
+            })
+        }
+    } catch(e) {
+        console.log(e);
         res.statusMessage = "Something went wrong";
         res.status(500).end();
     }
