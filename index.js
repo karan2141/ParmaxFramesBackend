@@ -27,7 +27,8 @@ app.get('/',async(req,res) => {
             name,
             email
         })
-        user.save()
+        const saved = await user.save()
+        console.log(saved, 'saved');
         res.send({
             status: 200,
             message: 'Success'
