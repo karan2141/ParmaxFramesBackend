@@ -2,17 +2,19 @@ import express from 'express'
 import connectMongoDb from './mongoConfig.js'
 import bodyParser from 'body-parser'
 import { User } from './model.js'
-import axios from 'axios'
 import chalk from 'chalk'
 import { generateOTP } from './utils.js'
 import sendMail from './emailService.js'
 import Jwt from 'jsonwebtoken'
+import cors from 'cors';
 
 const JwtSecret = process.env.SECRET
 
 connectMongoDb()
 
 const app = express()
+
+app.use(cors())
 
 app.use(bodyParser.urlencoded({
     extended: true
