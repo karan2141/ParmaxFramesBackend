@@ -38,7 +38,7 @@ app.get('/',async(req,res) => {
     }
 })
 
-const port = process.env.PORT
+const port = process.env.PORT || 8080
 app.listen(port, ()=>{
     console.log(chalk.green(`server started on port ${port}`));
 })
