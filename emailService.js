@@ -20,7 +20,7 @@ const sendMail = async (params) => {
         <div style="margin:50px auto;width:70%;padding:20px 0">
           <div style="border-bottom:1px solid #eee">
             <a href="https://parmaxframes.vercel.app/">
-              <img style="height: 48px; margin-bottom: 5px" src="https://parmaxframes.vercel.app/static/media/logo.a6d129c215cd619a81d9.webp" />
+              <img style="height: 48px; margin-bottom: 5px" src="https://parmaxframes.vercel.app/static/media/logo.a6d129c215cd619a81d9.png" />
             </a>
           </div>
           <p style="font-size:1.1em">Hi,</p>
