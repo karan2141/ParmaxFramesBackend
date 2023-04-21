@@ -36,8 +36,7 @@ app.post('/verify-email',async(req,res) => {
         } else {
             await User.updateOne({email}, {OTP})
         }
-        const result = await sendMail({ to: email, OTP })
-        console.log(result, 'emailsent');
+        await sendMail({ to: email, OTP })
         res.send({
             status: 200,
             message: 'Otp sent successfully'
