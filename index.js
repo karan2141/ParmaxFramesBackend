@@ -1,20 +1,23 @@
 import express from 'express'
 import connectMongoDb from './mongoConfig.js'
 import bodyParser from 'body-parser'
-import { User } from './model.js'
 import chalk from 'chalk'
-import { generateOTP } from './utils.js'
-import sendMail from './emailService.js'
-import Jwt from 'jsonwebtoken'
 import cors from 'cors';
-
-const JwtSecret = process.env.SECRET
+import passport from 'passport'
+import cookieSession from 'cookie-session'
+import PassportSetup from './PassportSetup.js';
+import googleRouter from './routes/googleAuth.js'
+import emailAuthRouter from './routes/emailAuth.js'
 
 connectMongoDb()
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+    origin: [process.env.FE_URL,'http://localhost:3000/'],
+    methods: "GET,POST",
+    credentials: true
+}))
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -22,66 +25,18 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.json());
 
-app.post('/verify-email',async(req,res) => {
-    try{
-        const { email } = req.body
-        const existing = await User.findOne({ email })
-        const OTP = generateOTP()
-        if(!existing) {
-            const user = new User({
-                email,
-                OTP
-            })
-            await user.save()
-        } else {
-            await User.updateOne({email}, {OTP})
-        }
-        await sendMail({ to: email, OTP })
-        res.send({
-            status: 200,
-            message: 'Otp sent successfully'
-        })
-    } catch(e) {
-        console.log(e);
-        res.statusMessage = "Something went wrong";
-        res.status(500).end();
-    }
-})
+app.use(
+    cookieSession({
+        name: 'session',
+        keys: ['cyberwolve'],
+        maxAge: 24*60*60*100
+    })
+)
 
-app.post('/verify-otp', async(req,res)=>{
-    try {
-        const { email, OTP } = req.body
-        const existing = await User.findOne({ email })
-        if (existing) {
-            if (existing.OTP === OTP) {
-                const token = Jwt.sign({ email,  }, JwtSecret, {
-                    expiresIn: "6000s"
-                });
-                res.send({
-                    status: 200,
-                    message: 'Otp verified successfully',
-                    data: {
-                        token
-                    }
-                })
-            } else {
-                res.send({
-                    status: 401,
-                    message: 'Unauthorized'
-                })
-            }
-        } else {
-            res.send({
-                status: 404,
-                message: 'Email does not exists'
-            })
-        }
-    } catch(e) {
-        console.log(e);
-        res.statusMessage = "Something went wrong";
-        res.status(500).end();
-    }
-})
+app.use(passport.initialize())
+
+app.use("/auth", googleRouter)
+app.use("/auth", emailAuthRouter)
 
 const port = process.env.PORT || 8080
 app.listen(port, ()=>{
