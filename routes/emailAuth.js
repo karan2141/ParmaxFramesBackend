@@ -1,9 +1,9 @@
 import { Router } from "express"
-import { User } from "../model"
+import { User } from "../model.js"
 import { generateOTP } from "../utils"
-import sendMail from "../emailService"
+import sendMail from "../emailService.js"
 import Jwt from 'jsonwebtoken'
-import { JwtSecret } from "../constants"
+import { JwtSecret } from "../constants.js"
 
 const emailAuthRouter = Router()
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from 'passport'
-import { FE_URL } from "../constants"
+import { FE_URL } from "../constants.js"
 
 const googleRouter = Router()
 

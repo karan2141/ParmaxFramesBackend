@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import { MAIL_EMAIL, MAIL_PASSWORD } from './constants';
+import { MAIL_EMAIL, MAIL_PASSWORD } from './constants.js';
 
 const MAIL_SETTINGS = {
   service: 'gmail',

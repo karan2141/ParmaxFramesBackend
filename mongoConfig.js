@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import chalk from "chalk";
-import { DB_NAME, DB_PASSWORD, DB_USERNAME } from './constants'
+import { DB_NAME, DB_PASSWORD, DB_USERNAME } from './constants.js'
 
 mongoose.set('strictQuery', false)
 
