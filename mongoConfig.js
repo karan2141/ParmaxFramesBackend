@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import chalk from "chalk";
-import { DB_NAME, DB_PASSWORD, DB_USERNAME } from './constants.js'
 
 mongoose.set('strictQuery', false)
+
+const { DB_USERNAME, DB_PASSWORD, DB_NAME } = process.env
 
 const connectMongoDb = async () => {
     try {
