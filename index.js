@@ -13,11 +13,7 @@ connectMongoDb()
 
 const app = express()
 
-app.use(cors({
-    origin: '*',
-    methods: "GET,POST,OPTIONS",
-    credentials: true
-}))
+app.use(cors())
 
 app.use(bodyParser.urlencoded({
     extended: true
