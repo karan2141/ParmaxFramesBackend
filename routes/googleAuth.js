@@ -4,7 +4,7 @@ import { FE_URL } from "../constants.js"
 
 const googleRouter = Router()
 
-googleRouter.get(
+googleRouter.post(
     '/login/success',
     (req,res)=>{
         if(req.isAuthenticated()) {
