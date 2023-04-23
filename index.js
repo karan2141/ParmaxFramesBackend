@@ -34,6 +34,8 @@ app.use(
 
 app.use(passport.initialize())
 
+PassportSetup()
+
 app.use("/auth", googleRouter)
 app.use("/auth", emailAuthRouter)
 

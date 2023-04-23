@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { User } from "../model.js"
-import { generateOTP } from "../utils"
+import { generateOTP } from "../utils.js"
 import sendMail from "../emailService.js"
 import Jwt from 'jsonwebtoken'
 import { JwtSecret } from "../constants.js"
