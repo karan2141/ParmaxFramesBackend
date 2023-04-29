@@ -8,6 +8,8 @@ import cookieSession from 'cookie-session'
 import PassportSetup from './PassportSetup.js';
 import googleRouter from './routes/googleAuth.js'
 import emailAuthRouter from './routes/emailAuth.js'
+import facebookRouter from './routes/facebookAuth.js';
+import baseRouter from './routes/baseRoutes.js';
 
 connectMongoDb()
 
@@ -37,7 +39,9 @@ app.use(passport.initialize())
 PassportSetup()
 
 app.use("/auth", googleRouter)
+app.use("/auth", facebookRouter)
 app.use("/auth", emailAuthRouter)
+app.use("", baseRouter)
 
 const port = process.env.PORT || 8080
 app.listen(port, ()=>{

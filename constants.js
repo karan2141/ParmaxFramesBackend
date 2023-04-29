@@ -4,6 +4,7 @@ export const DB_NAME = process.env.DB_NAME
 export const MAIL_EMAIL = process.env.MAIL_EMAIL
 export const MAIL_PASSWORD = process.env.MAIL_PASSWORD
 export const JwtSecret = process.env.SECRET
+export const JwtExpireInMin = process.env.JWT_EXPIRE_IN_MIN
 export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 export const FE_URL = process.env.FE_URL

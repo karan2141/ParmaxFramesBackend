@@ -3,7 +3,7 @@ import { User } from "../model.js"
 import { generateOTP } from "../utils.js"
 import sendMail from "../emailService.js"
 import Jwt from 'jsonwebtoken'
-import { JwtSecret } from "../constants.js"
+import { JwtExpireInMin, JwtSecret } from "../constants.js"
 
 const emailAuthRouter = Router()
 
@@ -39,8 +39,8 @@ emailAuthRouter.post('/verify-otp', async(req,res)=>{
         const existing = await User.findOne({ email })
         if (existing) {
             if (existing.OTP === OTP) {
-                const token = Jwt.sign({ email,  }, JwtSecret, {
-                    expiresIn: "6000s"
+                const token = Jwt.sign({ userId: existing._id }, JwtSecret, {
+                    expiresIn: JwtExpireInMin*60
                 });
                 res.send({
                     status: 200,

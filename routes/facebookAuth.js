@@ -2,10 +2,10 @@ import { Router } from "express";
 import { User } from "../model.js";
 import Jwt from "jsonwebtoken"
 
-const googleRouter = Router()
+const facebookRouter = Router()
 
-googleRouter.post(
-    '/google',
+facebookRouter.post(
+    '/facebook',
     async(req,res)=>{
         try {
             const { email, data } = req.body
@@ -14,14 +14,14 @@ googleRouter.post(
             if(!user) {
                 const newUser = new User({
                     email,
-                    googleData: data
+                    facebookData: data
                 })
                 await newUser.save()
                 token = Jwt.sign({ userId: newUser._id }, JwtSecret, {
                     expiresIn: JwtExpireInMin*60
                 });
             } else {
-                user.googleData = data
+                user.facebookData = data
                 await user.save()
                 token = Jwt.sign({ userId: user._id }, JwtSecret, {
                     expiresIn: JwtExpireInMin*60
@@ -35,7 +35,7 @@ googleRouter.post(
                 }
             })
         } catch (e) {
-            console.log('google login error --->', JSON.stringify(e))
+            console.log('facebook login error --->', JSON.stringify(e))
             res.status(401).json({
                 error: new Error('Invalid request!')
             });
@@ -43,4 +43,4 @@ googleRouter.post(
     }
 )
 
-export default googleRouter
+export default facebookRouter
