@@ -7,20 +7,22 @@ const baseRouter = Router()
 baseRouter.get('/authenticate', JwtAuthMiddleware, async(req, res)=>{
     const { userId } = req.body
     const user = await User.findById(userId)
+    const { images, email } = user
     res.send({
         status: 200,
         message: 'Authorized',
-        data: user
+        data: {
+            images,
+            email
+        }
     })
 })
 
 baseRouter.post('/save-progress', JwtAuthMiddleware, async(req, res)=>{
     const { userId, images } = req.body
     try {
-        const user = await User.findById(userId)
+        const user = await User.findByIdAndUpdate(userId, { images })
         if(!user) throw 'Bad request'
-        user.images = images
-        await user.save()
         res.send({
             status: 200,
             message: 'Success'
