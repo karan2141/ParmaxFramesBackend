@@ -18,7 +18,9 @@ googleRouter.post(
             })
             console.log('here 2', { userId: user._id, second: user.id });
             const token = 'ehllofaslkdfja;l'
-            const t = Jwt.sign({ userId: user._id}, JwtSecret)
+            const t = Jwt.sign({ userId: user._id}, JwtSecret, {
+                expiresIn: JwtExpireInMin*60
+            })
             console.log(t, 't2');
             // const token = Jwt.sign({ userId: user._id }, JwtSecret, {
             //     expiresIn: JwtExpireInMin*60
@@ -28,7 +30,7 @@ googleRouter.post(
             const final = {
                 email,
                 profilePic: data.picture,
-                token
+                token: t
             }
 
             console.log('here 4', final);
