@@ -16,7 +16,7 @@ googleRouter.post(
                 new: true,
                 upsert: true
             })
-            console.log('here 2');
+            console.log('here 2', { userId: user._id });
             const token = 'ehllofaslkdfja;l'
             // const token = Jwt.sign({ userId: user._id }, JwtSecret, {
             //     expiresIn: JwtExpireInMin*60
