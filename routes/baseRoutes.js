@@ -1,6 +1,8 @@
 import { Router } from "express"
 import JwtAuthMiddleware from "../middleware/jwtAuth.js"
-import { Message, Order, User } from "../model.js"
+import Order from "../models/orderModel.js"
+import Message from "../models/messageModel.js"
+import User from "../models/userModel.js"
 
 const baseRouter = Router()
 

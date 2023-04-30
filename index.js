@@ -3,13 +3,13 @@ import connectMongoDb from './mongoConfig.js'
 import bodyParser from 'body-parser'
 import chalk from 'chalk'
 import cors from 'cors';
-import passport from 'passport'
-import cookieSession from 'cookie-session'
-import PassportSetup from './PassportSetup.js';
 import googleRouter from './routes/googleAuth.js'
 import emailAuthRouter from './routes/emailAuth.js'
 import facebookRouter from './routes/facebookAuth.js';
 import baseRouter from './routes/baseRoutes.js';
+import { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } from './constants.js';
+import paymentRouter from './routes/paymentRoute.js';
+import Razorpay from 'razorpay'
 
 connectMongoDb()
 
@@ -21,23 +21,20 @@ app.use(cors({
 }))
 
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: true,
+    limit: '50mb'
 }));
+
+app.use(bodyParser.json({limit: '50mb'}));
 
 app.use(express.json());
 
-app.use(
-    cookieSession({
-        name: 'session',
-        keys: ['cyberwolve'],
-        maxAge: 24*60*60*100
-    })
-)
+export const instance = new Razorpay({
+    key_id: RAZORPAY_KEY_ID,
+    key_secret: RAZORPAY_KEY_SECRET,
+});
 
-app.use(passport.initialize())
-
-PassportSetup()
-
+app.use("/payment", paymentRouter);
 app.use("/auth", googleRouter)
 app.use("/auth", facebookRouter)
 app.use("/auth", emailAuthRouter)
