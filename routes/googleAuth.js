@@ -10,17 +10,25 @@ googleRouter.post(
     async(req,res)=>{
         try {
             const { email, data } = req.body
-            console.log(JSON.stringify(req.body));
             if(!data.email_verified) throw "Email not verified"
             console.log('here 1');
             const user = await User.findOneAndUpdate({ email }, {googleData: data}, {
                 new: true,
                 upsert: true
             })
-            console.log('here 2');
+            console.log('here 2', JSON.stringify(user));
             const token = Jwt.sign({ userId: user._id }, JwtSecret, {
                 expiresIn: JwtExpireInMin*60
             });
+            console.log('here 3', token);
+
+            const final = {
+                email,
+                profilePic: data.picture,
+                token
+            }
+
+            console.log('here 4', final);
             // if(!user) {
             //     const newUser = new User({
             //         email,
@@ -46,11 +54,7 @@ googleRouter.post(
             res.send({
                 status: 200,
                 message: 'Otp verified successfully',
-                data: {
-                    email,
-                    profilePic: data.picture,
-                    token
-                }
+                data: final
             })
         } catch (e) {
             console.log('google login error --->', JSON.stringify(e))
