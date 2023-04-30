@@ -9,6 +9,7 @@ googleRouter.post(
     async(req,res)=>{
         try {
             const { email, data } = req.body
+            if(!data.email_verified) throw "Email not verified"
             const user = await User.findOne({ email })
             let token = ''
             if(!user) {
@@ -31,6 +32,8 @@ googleRouter.post(
                 status: 200,
                 message: 'Otp verified successfully',
                 data: {
+                    email,
+                    profilePic: data.picture,
                     token
                 }
             })
