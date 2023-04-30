@@ -11,27 +11,20 @@ googleRouter.post(
         try {
             const { email, data } = req.body
             if(!data.email_verified) throw "Email not verified"
-            console.log('here');
             const user = await User.findOne({ email })
-            console.log('here');
             let token = ''
-            console.log('here');
             if(!user) {
                 const newUser = new User({
                     email,
                     googleData: data
                 })
-                console.log('here');
                 await newUser.save()
                 token = Jwt.sign({ userId: newUser._id }, JwtSecret, {
                     expiresIn: JwtExpireInMin*60
                 });
-                console.log('here');
             } else {
-                console.log('here');
                 user.googleData = data
                 await user.save()
-                console.log('here', user);
                 token = Jwt.sign({ userId: user._id }, JwtSecret, {
                     expiresIn: JwtExpireInMin*60
                 });
