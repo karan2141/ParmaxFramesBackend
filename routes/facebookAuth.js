@@ -10,31 +10,21 @@ facebookRouter.post(
     async(req,res)=>{
         try {
             const { email, data } = req.body
-            if(!data.email_verified) throw "Email not verified"
-            const user = await User.findOne({ email })
-            let token = ''
-            if(!user) {
-                const newUser = new User({
-                    email,
-                    facebookData: data
-                })
-                await newUser.save()
-                token = Jwt.sign({ userId: newUser._id }, JwtSecret, {
-                    expiresIn: JwtExpireInMin*60
-                });
-            } else {
-                user.facebookData = data
-                await user.save()
-                token = Jwt.sign({ userId: user._id }, JwtSecret, {
-                    expiresIn: JwtExpireInMin*60
-                });
-            }
+
+            const user = await User.findOneAndUpdate({ email }, {facebookData: data}, {
+                new: true,
+                upsert: true
+            })
+            const token = Jwt.sign({ userId: user.id}, JwtSecret, {
+                expiresIn: JwtExpireInMin*60
+            })
+            
             res.send({
                 status: 200,
-                message: 'Otp verified successfully',
+                message: 'Logged in Successfully',
                 data: {
                     email,
-                    profilePic: data.picture,
+                    profilePic: data.picture.data.url,
                     token
                 }
             })

@@ -10,56 +10,22 @@ googleRouter.post(
     async(req,res)=>{
         try {
             const { email, data } = req.body
-            if(!data.email_verified) throw "Email not verified"
-            console.log('here 1');
             const user = await User.findOneAndUpdate({ email }, {googleData: data}, {
                 new: true,
                 upsert: true
             })
-            console.log('here 2', { userId: user._id, second: user.id });
-            const token = 'ehllofaslkdfja;l'
-            const t = Jwt.sign({ userId: user.id}, JwtSecret, {
+            const token = Jwt.sign({ userId: user.id}, JwtSecret, {
                 expiresIn: JwtExpireInMin*60
             })
-            console.log(t, 't2');
-            // const token = Jwt.sign({ userId: user._id }, JwtSecret, {
-            //     expiresIn: JwtExpireInMin*60
-            // });
-            console.log('here 3', token);
-
-            const final = {
-                email,
-                profilePic: data.picture,
-                token: t
-            }
-
-            console.log('here 4', final);
-            // if(!user) {
-            //     const newUser = new User({
-            //         email,
-            //         googleData: data
-            //     })
-            //     await newUser.save()
-            //     console.log('here 3');
-            //     token = Jwt.sign({ userId: newUser._id }, JwtSecret, {
-            //         expiresIn: JwtExpireInMin*60
-            //     });
-            //     console.log('here 4');
-            // } else {
-            //     console.log('here 5');
-            //     user.googleData = data
-            //     await user.save()
-            //     console.log('here 6', JSON.stringify());
-            //     token = Jwt.sign({ userId: user._id }, JwtSecret, {
-            //         expiresIn: JwtExpireInMin*60
-            //     });
-            //     console.log('here 7');
-            // }
-            // console.log(JSON.stringify(data));
+            
             res.send({
                 status: 200,
-                message: 'Otp verified successfully',
-                data: final
+                message: 'Logged in Successfully',
+                data: {
+                    email,
+                    profilePic: data.picture,
+                    token
+                }
             })
         } catch (e) {
             console.log('google login error --->', JSON.stringify(e))
