@@ -4,8 +4,8 @@ const {
     DB_NAME,
     MAIL_EMAIL,
     MAIL_PASSWORD,
-    JwtSecret,
-    JwtExpireInMin,
+    SECRET: JwtSecret,
+    JWT_EXPIRE_IN_MIN: JwtExpireInMin,
     FE_URL,
     RAZORPAY_KEY_ID,
     RAZORPAY_KEY_SECRET
