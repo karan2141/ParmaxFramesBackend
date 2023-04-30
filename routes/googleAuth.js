@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { User } from "../model.js";
-import Jwt from "jsonwebtoken"
+import Jwt from 'jsonwebtoken'
 import { JwtExpireInMin, JwtSecret } from "../constants.js";
 
 const googleRouter = Router()
@@ -16,8 +16,10 @@ googleRouter.post(
                 new: true,
                 upsert: true
             })
-            console.log('here 2', { userId: user._id });
+            console.log('here 2', { userId: user._id, second: user.id });
             const token = 'ehllofaslkdfja;l'
+            const t = Jwt.sign({ userId: user._id}, JwtSecret)
+            console.log(t, 't2');
             // const token = Jwt.sign({ userId: user._id }, JwtSecret, {
             //     expiresIn: JwtExpireInMin*60
             // });
