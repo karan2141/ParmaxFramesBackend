@@ -40,7 +40,7 @@ emailAuthRouter.post('/verify-otp', async(req,res)=>{
         if (existing) {
             if (existing.OTP === OTP) {
                 const token = Jwt.sign({ userId: existing._id }, JwtSecret, {
-                    expiresIn: JwtExpireInMin*60
+                    expiresIn: Number(JwtExpireInMin*60)
                 });
                 res.send({
                     status: 200,
