@@ -10,6 +10,7 @@ googleRouter.post(
     async(req,res)=>{
         try {
             const { email, data } = req.body
+            console.log(JSON.stringify(req.body));
             if(!data.email_verified) throw "Email not verified"
             const user = await User.findOne({ email })
             let token = ''
