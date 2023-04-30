@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { User } from "../model.js";
 import Jwt from "jsonwebtoken"
+import { JwtExpireInMin, JwtSecret } from "../constants.js";
 
 const facebookRouter = Router()
 
