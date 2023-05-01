@@ -15,7 +15,7 @@ const JwtAuthMiddleware = async(req, res, next) => {
         next();
       }
     } catch(e) {
-    console.log('error-----', JSON.stringify(e));
+    console.log('error in JWT auth-----', JSON.stringify(e));
     res.status(401).json({
         error: new Error('Invalid request!')
     });

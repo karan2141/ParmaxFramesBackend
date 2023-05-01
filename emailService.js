@@ -45,4 +45,39 @@ const sendMail = async (params) => {
   }
 };
 
+export const sendOrderMail = (params) => {
+  try {
+    // let info = await 
+    transporter.sendMail({
+      from: MAIL_SETTINGS.auth.user,
+      to: params.to, 
+      subject: 'Order Recieved',
+      html: `
+      <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+        <div style="margin:50px auto;width:70%;padding:20px 0">
+          <div style="border-bottom:1px solid #eee">
+            <a href="https://parmaxframes.vercel.app/">
+              <img style="height: 48px; margin-bottom: 5px" src="https://parmaxframes.vercel.app/static/media/logo.a6d129c215cd619a81d9.png" />
+            </a>
+          </div>
+          <p style="font-size:1.1em">Hi,</p>
+          <p>Thank you for choosing Parmax Frames. we have successfully recieved you order ${params.orderId}</p>
+          <p style="font-size:0.9em;">Regards,<br />Parmax Frames</p>
+          <hr style="border:none;border-top:1px solid #eee" />
+          <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+            <p>Parmax Frames</p>
+            <p>1600 Amphitheatre Parkway</p>
+            <p>California</p>
+          </div>
+        </div>
+      </div>
+    `,
+    });
+    // return info;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
 export default sendMail

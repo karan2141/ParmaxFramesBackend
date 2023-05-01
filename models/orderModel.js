@@ -2,12 +2,15 @@ import mongoose from "mongoose";
 // import autoIncrement from "mongoose-auto-increment"
 
 const ordersSchema = new mongoose.Schema({
-    images: { type: [String], required: true },
+    images: { type: [Object], required: true },
     userId: { type: mongoose.Schema.Types.ObjectId, required: true },
     price: { type: Number, required: true },
     paymentStatus: { type: Boolean },
     address: { type: Object },
-    razorpayOrder: { type: Object }
+    razorpayOrder: { type: Object },
+    phone: String,
+    name: String,
+    email: String
 },
 {
     timestamps: true

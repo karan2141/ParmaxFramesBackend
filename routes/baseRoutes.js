@@ -84,4 +84,32 @@ baseRouter.post('/contact-us', async(req, res)=> {
     }
 })
 
+baseRouter.get('/get-orders', JwtAuthMiddleware, async(req, res)=> {
+    try {
+        const { userId } = req.body
+        const orders = await Order.find({ userId })
+        const data = orders.map((order)=>{
+            return {
+                images: order.images.length,
+                price: order.price,
+                paymentStatus: order.paymentStatus,
+                createdAt: order.createdAt,
+                address: Object.keys(order.address).map((k)=> order.address[k]).join(", "),
+                orderId: order.razorpayOrder.id,
+                contactDetails: [order.name, order.phone, order.email].join(", ")
+            }
+        })
+        res.send({
+            status: 200,
+            message: 'Success',
+            data
+        })
+    } catch (e) {
+        console.log('error in get-orders --->', JSON.stringify(e))
+        res.status(401).json({
+            error: new Error('Something went wrong')
+        });
+    }
+})
+
 export default baseRouter

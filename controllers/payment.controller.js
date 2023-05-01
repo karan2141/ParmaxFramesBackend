@@ -4,11 +4,12 @@ import Payment from "../models/paymentModel.js";
 import { FE_URL, RAZORPAY_KEY_SECRET } from "../constants.js";
 import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
+import { sendOrderMail } from "../emailService.js";
 
 
 export const checkout = async (req, res) => {
   try {
-    const { email='kvs2141@gmail.com', phone='9855309403', name='Karanveer Singh', amount, images, address } = req.body
+    const { email, phone, name, amount, images, address } = req.body
     const options = {
       amount: Number(amount * 100),
       currency: "INR",
@@ -27,7 +28,10 @@ export const checkout = async (req, res) => {
       price: amount,
       paymentStatus: false,
       address,
-      razorpayOrder: order
+      razorpayOrder: order,
+      phone,
+      name,
+      email
     })
 
     await User.findOneAndUpdate({email}, { $push: { orders: newOrder._id }} )
@@ -68,7 +72,10 @@ export const paymentVerification = async (req, res) => {
 
       await newPayment.save()
 
-      await Order.findOneAndUpdate({'razorpayOrder.id': razorpay_order_id}, {paymentStatus: true})
+      const order = await Order.findOneAndUpdate({'razorpayOrder.id': razorpay_order_id}, {paymentStatus: true})
+      const user = await User.findByIdAndUpdate(order.userId, {images: []})
+
+      sendOrderMail({to: user.email, orderId: razorpay_order_id})
 
       res.redirect(
         `${FE_URL}/paymentsuccess?reference=${razorpay_payment_id}`
