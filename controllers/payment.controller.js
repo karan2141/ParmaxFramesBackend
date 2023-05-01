@@ -21,7 +21,7 @@ export const checkout = async (req, res) => {
       email,
     })
 
-    const newOrder = new Order({
+    const newOrder = await Order.create({
       images,
       userId: user._id,
       price: amount,
@@ -29,8 +29,6 @@ export const checkout = async (req, res) => {
       address,
       razorpayOrder: order
     })
-
-    await newOrder.save()
 
     await User.findOneAndUpdate({email}, { $push: { orders: newOrder._id }} )
   
@@ -69,6 +67,8 @@ export const paymentVerification = async (req, res) => {
       })
 
       await newPayment.save()
+
+      await Order.findOneAndUpdate({'razorpayOrder.id': razorpay_order_id}, {paymentStatus: true})
 
       res.redirect(
         `${FE_URL}/paymentsuccess?reference=${razorpay_payment_id}`

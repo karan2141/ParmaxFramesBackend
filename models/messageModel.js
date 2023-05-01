@@ -5,6 +5,9 @@ const messageSchema = new mongoose.Schema({
     email: String,
     subject: String,
     message: String
+},
+{
+    timestamps: true
 })
 
 const Message = mongoose.model("message", messageSchema)
