@@ -9,8 +9,8 @@ const baseRouter = Router()
 baseRouter.get('/authenticate', JwtAuthMiddleware, async(req, res)=>{
     const { userId } = req.body
     const user = await User.findById(userId)
-    const { images, email, googleData, facebookData } = user
-    const profilePic = googleData ? googleData.picture : facebookData ? googleData.picture.data.url : null
+    const { images, email, googleData, facebookData, loggedInBy='email' } = user
+    const profilePic = loggedInBy === 'google' ? googleData?.picture : loggedInBy === 'facebook' ? googleData?.picture?.data?.url : null
     res.send({
         status: 200,
         message: 'Authorized',

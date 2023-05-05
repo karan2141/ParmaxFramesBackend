@@ -10,7 +10,7 @@ facebookRouter.post(
     async(req,res)=>{
         try {
             const { email, data } = req.body
-            const user = await User.findOneAndUpdate({ email }, {facebookData: data}, {
+            const user = await User.findOneAndUpdate({ email }, {facebookData: data, loggedInBy: 'facebook'}, {
                 new: true,
                 upsert: true
             })

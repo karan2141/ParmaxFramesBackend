@@ -13,7 +13,8 @@ const userSchema = new mongoose.Schema({
         frame: String,
         filter: String
     }],
-    orders: [mongoose.Schema.Types.ObjectId]
+    orders: [mongoose.Schema.Types.ObjectId],
+    loggedInBy: String
 },
 {
     timestamps: true

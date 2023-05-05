@@ -10,7 +10,7 @@ googleRouter.post(
     async(req,res)=>{
         try {
             const { email, data } = req.body
-            const user = await User.findOneAndUpdate({ email }, {googleData: data}, {
+            const user = await User.findOneAndUpdate({ email }, {googleData: data, loggedInBy: 'google'}, {
                 new: true,
                 upsert: true
             })

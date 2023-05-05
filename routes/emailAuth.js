@@ -42,6 +42,8 @@ emailAuthRouter.post('/verify-otp', async(req,res)=>{
                 const token = Jwt.sign({ userId: existing._id }, JwtSecret, {
                     expiresIn: Number(JwtExpireInMin*60)
                 });
+                existing.loggedInBy = 'email'
+                await existing.save()
                 res.send({
                     status: 200,
                     message: 'Otp verified successfully',
