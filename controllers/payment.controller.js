@@ -5,13 +5,22 @@ import { FE_URL, RAZORPAY_KEY_SECRET } from "../constants.js";
 import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
 import { sendOrderMail } from "../emailService.js";
+import PromoCode from "../models/promoCodeModel.js";
 
 
 export const checkout = async (req, res) => {
   try {
-    const { email, phone, name, amount, images, address } = req.body
+    const { email, phone, name, amount, images, address, promoCode } = req.body
+    let actualDiscount
+    try {
+      const result = await PromoCode.findOne({ code: promoCode })
+      actualDiscount = result.discount
+    } catch {
+      actualDiscount = 0
+    }
+    console.log(actualDiscount);
     const options = {
-      amount: Number(amount * 100),
+      amount: Number(amount * 100)-actualDiscount*100,
       currency: "INR",
     };
     const order = await instance.orders.create(options);
@@ -25,13 +34,15 @@ export const checkout = async (req, res) => {
     const newOrder = await Order.create({
       images,
       userId: user._id,
-      price: amount,
+      price: Number(amount)-Number(actualDiscount),
       paymentStatus: false,
       address,
       razorpayOrder: order,
       phone,
       name,
-      email
+      email,
+      promoCode,
+      discount: actualDiscount
     })
 
     await User.findOneAndUpdate({email}, { $push: { orders: newOrder._id }} )

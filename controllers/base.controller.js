@@ -93,7 +93,8 @@ export const getOrders = async(req, res)=> {
                 createdAt: order.createdAt,
                 address: Object.keys(order.address).map((k)=> order.address[k]).join(", "),
                 orderId: order.razorpayOrder.id,
-                contactDetails: [order.name, order.phone, order.email].join(", ")
+                contactDetails: [order.name, order.phone, order.email].join(", "),
+                discount: order.discount
             }
         })
         res.send({

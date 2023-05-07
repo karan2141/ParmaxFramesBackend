@@ -10,7 +10,9 @@ const ordersSchema = new mongoose.Schema({
     razorpayOrder: { type: Object },
     phone: String,
     name: String,
-    email: String
+    email: String,
+    promoCode: String,
+    discount: Number
 },
 {
     timestamps: true
