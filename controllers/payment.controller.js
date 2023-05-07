@@ -18,7 +18,6 @@ export const checkout = async (req, res) => {
     } catch {
       actualDiscount = 0
     }
-    console.log(actualDiscount);
     const options = {
       amount: Number(amount * 100)-actualDiscount*100,
       currency: "INR",
