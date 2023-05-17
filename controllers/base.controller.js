@@ -2,13 +2,14 @@ import Message from "../models/messageModel.js"
 import Order from "../models/orderModel.js"
 import PromoCode from "../models/promoCodeModel.js"
 import User from "../models/userModel.js"
+import { ResposneHandler } from "../utils.js"
 
 export const authenticate = async(req, res)=>{
     const { userId } = req.body
     const user = await User.findById(userId)
     const { images, email, googleData, facebookData, loggedInBy='email' } = user
     const profilePic = loggedInBy === 'google' ? googleData?.picture : loggedInBy === 'facebook' ? googleData?.picture?.data?.url : null
-    res.send({
+    res.send(ResposneHandler({
         status: 200,
         message: 'Authorized',
         data: {
@@ -16,7 +17,7 @@ export const authenticate = async(req, res)=>{
             email,
             profilePic
         }
-    })
+    }))
 }
 
 export const saveProgress = async(req, res)=>{
@@ -24,10 +25,10 @@ export const saveProgress = async(req, res)=>{
     try {
         const user = await User.findByIdAndUpdate(userId, { images })
         if(!user) throw 'Bad request'
-        res.send({
+        res.send(ResposneHandler({
             status: 200,
             message: 'Success'
-        })
+        }))
     } catch(e) {
         console.log('error in save progress --->', JSON.stringify(e))
         res.status(401).json({
@@ -47,10 +48,10 @@ export const saveOrder = async(req, res)=> {
         })
         await order.save()
         await User.findByIdAndUpdate(userId, { $push: { orders: order._id} })
-        res.send({
+        res.send(ResposneHandler({
             status: 200,
             message: 'Order saved Successfully'
-        })
+        }))
     } catch(e) {
         console.log('error in save order --->', JSON.stringify(e))
         res.status(401).json({
@@ -69,10 +70,10 @@ export const contactUs = async(req, res)=> {
             message
         })
         await newMessage.save()
-        res.send({
+        res.send(ResposneHandler({
             status: 200,
             message: 'Message saved Successfully'
-        })
+        }))
     } catch (e) {
         console.log('error in contact us form --->', JSON.stringify(e))
         res.status(401).json({
@@ -97,11 +98,11 @@ export const getOrders = async(req, res)=> {
                 discount: order.discount
             }
         })
-        res.send({
+        res.send(ResposneHandler({
             status: 200,
             message: 'Success',
             data
-        })
+        }))
     } catch (e) {
         console.log('error in get-orders --->', JSON.stringify(e))
         res.status(401).json({
@@ -115,19 +116,19 @@ export const checkPromoCode = async(req, res) => {
         const { code } = req.body
         const existing = await PromoCode.findOne({ code })
         if (!existing || !existing.active) {
-            res.status(404).send({
+            res.send(ResposneHandler({
                 status: 404,
                 message: 'Invalid PromoCode'
-            })
+            }))
         } else {
-            res.send({
+            res.send(ResposneHandler({
                 status: 200,
                 message: 'Promocode successfully applied',
                 data: {
                     code: existing.code,
                     discount: existing.discount
                 }
-            })
+            }))
         }
     } catch (e) {
         console.log('error in check-promocode --->', JSON.stringify(e))

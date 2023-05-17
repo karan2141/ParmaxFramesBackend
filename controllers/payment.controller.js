@@ -6,7 +6,7 @@ import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
 import { sendOrderMail } from "../emailService.js";
 import PromoCode from "../models/promoCodeModel.js";
-
+import { ResposneHandler } from "../utils.js"
 
 export const checkout = async (req, res) => {
   try {
@@ -46,10 +46,10 @@ export const checkout = async (req, res) => {
 
     await User.findOneAndUpdate({email}, { $push: { orders: newOrder._id }} )
   
-    res.status(200).json({
+    res.status(200).json(ResposneHandler({
       success: true,
       order,
-    });
+    }));
   } catch (e) {
     console.log('checkout error --->', JSON.stringify(e))
     res.status(401).json({

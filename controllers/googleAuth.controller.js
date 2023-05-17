@@ -1,6 +1,7 @@
 import Jwt from 'jsonwebtoken'
 import { JwtExpireInMin, JwtSecret } from "../constants.js";
 import User from "../models/userModel.js";
+import { ResposneHandler } from "../utils.js"
 
 export const google = async(req,res)=>{
     try {
@@ -13,7 +14,7 @@ export const google = async(req,res)=>{
             expiresIn: JwtExpireInMin*60
         })
         
-        res.send({
+        res.send(ResposneHandler({
             status: 200,
             message: 'Logged in Successfully',
             data: {
@@ -21,7 +22,7 @@ export const google = async(req,res)=>{
                 profilePic: data.picture,
                 token
             }
-        })
+        }))
     } catch (e) {
         console.log('google login error --->', JSON.stringify(e))
         res.status(401).json({

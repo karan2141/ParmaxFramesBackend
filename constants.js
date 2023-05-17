@@ -8,7 +8,10 @@ const {
     JWT_EXPIRE_IN_MIN: JwtExpireInMin,
     FE_URL,
     RAZORPAY_KEY_ID,
-    RAZORPAY_KEY_SECRET
+    RAZORPAY_KEY_SECRET,
+    ENCRYPTION_KEY,
+    ENCRYPTION_IV,
+    ENCRYPTION
 } = process.env
 
 export {
@@ -21,5 +24,8 @@ export {
     JwtExpireInMin,
     FE_URL,
     RAZORPAY_KEY_ID,
-    RAZORPAY_KEY_SECRET
+    RAZORPAY_KEY_SECRET,
+    ENCRYPTION_KEY,
+    ENCRYPTION_IV,
+    ENCRYPTION
 }
