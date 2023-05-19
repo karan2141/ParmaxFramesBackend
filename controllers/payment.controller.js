@@ -4,7 +4,7 @@ import Payment from "../models/paymentModel.js";
 import { FE_URL, RAZORPAY_KEY_SECRET } from "../constants.js";
 import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
-import { sendOrderMail } from "../emailService.js";
+import { sendOrderMail, sendOrderMailToOwner } from "../emailService.js";
 import PromoCode from "../models/promoCodeModel.js";
 import { ResposneHandler } from "../utils.js"
 
@@ -86,6 +86,26 @@ export const paymentVerification = async (req, res) => {
       const user = await User.findByIdAndUpdate(order.userId, {images: []})
 
       sendOrderMail({to: user.email, orderId: razorpay_order_id})
+
+      const attachments = order.images.map((img, i) => {
+        const extension = img.image.split(';')[0].split('/')[1] || 'jpg'
+        return {
+          filename: `image-${i+1}-frame-${img.frame}.${extension}`,
+          content: img.image.replace('data:', '').replace(/^.+,/, ''),
+          encoding: 'base64'
+        }
+      })
+
+      const orderDetails = {
+        orderId: razorpay_order_id,
+        attachments,
+        email: order.email,
+        phone: order.phone,
+        name: order.name,
+        address: Object.keys(order.address).map((k)=> order.address[k]).join(", ")
+      }
+
+      sendOrderMailToOwner(orderDetails)
 
       res.redirect(
         `${FE_URL}/paymentsuccess?reference=${razorpay_payment_id}`
