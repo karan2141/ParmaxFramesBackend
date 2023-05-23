@@ -120,7 +120,7 @@ export const paymentVerification = async (req, res) => {
       sendOrderMailToOwner(orderDetails)
 
       res.redirect(
-        `${FE_URL}/paymentstatus?id=${razorpay_payment_id}`
+        `${FE_URL}/paymentstatus?id=${razorpay_order_id}`
       );
     } else {
       res.status(400).json({

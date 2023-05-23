@@ -62,7 +62,7 @@ export const sendOrderMail = (params) => {
         </div>
         <hr>
         <h1 style="text-align: start; color: rgb(255, 94, 20); font-size: 20px; margin: 2px 0px;">Hello Robin,</h1>
-        <div style="text-align: left;">Thank you for you order. Your estimated delivery date is indicated below. If you would link to view the status of your order, please visit <a href="https://parmaxframes.com/my-orders">My Orders</a> on <a href="https://parmaxframes.com/">parmaxframes.com</a></div>
+        <div style="text-align: left;">Thank you for you order. Your estimated delivery date is indicated below. If you would link to view the status of your order, please visit <a href="${FE_URL}/my-orders">My Orders</a> on <a href="${FE_URL}">parmaxframes.com</a></div>
         <div style="background: rgb(217, 217, 217); padding: 10px; display: flex; border-top: 2px solid black; margin-top: 5px;">
             <div style="text-align: left; width: 50%;">
               <div style="font-weight: 600;">Ariving:</div>
