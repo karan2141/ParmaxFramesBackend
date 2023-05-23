@@ -10,7 +10,7 @@ import { ResposneHandler } from "../utils.js"
 
 export const checkout = async (req, res) => {
   try {
-    const { email, phone, name, amount, images, address, promoCode } = req.body
+    const { email, phone, name, amount, images, address, promoCode, pricePerFrame } = req.body
     let actualDiscount
     try {
       const result = await PromoCode.findOne({ code: promoCode })
@@ -41,7 +41,8 @@ export const checkout = async (req, res) => {
       name,
       email,
       promoCode,
-      discount: actualDiscount
+      discount: actualDiscount,
+      pricePerFrame
     })
 
     await User.findOneAndUpdate({email}, { $push: { orders: newOrder._id }} )
@@ -52,7 +53,7 @@ export const checkout = async (req, res) => {
     }));
   } catch (e) {
     console.log('checkout error --->', JSON.stringify(e))
-    res.status(401).json({
+    res.status(404).json({
         error: new Error('Invalid request!')
     });
   }
@@ -85,7 +86,18 @@ export const paymentVerification = async (req, res) => {
       const order = await Order.findOneAndUpdate({'razorpayOrder.id': razorpay_order_id}, {paymentStatus: true})
       const user = await User.findByIdAndUpdate(order.userId, {images: []})
 
-      sendOrderMail({to: user.email, orderId: razorpay_order_id})
+      const orderParams = {
+        to: user.email,
+        orderId: razorpay_order_id,
+        name: order.name,
+        address: [order.address.location, order.address.city, order.address.state, order.address.postalCode].join(', '),
+        country: order.country,
+        pricePerFrame: order.pricePerFrame,
+        noOfFrames: order.images.length,
+        discount: order.discount,
+        price: order.price
+      }
+      sendOrderMail(orderParams)
 
       const attachments = order.images.map((img, i) => {
         const extension = img.image.split(';')[0].split('/')[1] || 'jpg'
@@ -108,7 +120,7 @@ export const paymentVerification = async (req, res) => {
       sendOrderMailToOwner(orderDetails)
 
       res.redirect(
-        `${FE_URL}/paymentsuccess?reference=${razorpay_payment_id}`
+        `${FE_URL}/paymentstatus?id=${razorpay_payment_id}`
       );
     } else {
       res.status(400).json({
@@ -117,8 +129,32 @@ export const paymentVerification = async (req, res) => {
     } 
   } catch (e) {
     console.log('payment verification error --->', JSON.stringify(e))
-    res.status(401).json({
+    res.status(404).json({
         error: new Error('Invalid request!')
     });
   }
 };
+
+export const getOrderDetails = async(req, res) => {
+  try {
+    const { id } = req.body
+    const order = await Order.findOne({'razorpayOrder.id': id})
+    if( !order || !order.paymentStatus) throw 'payment failed or dont exist'
+
+    const orderParams = {
+      name: order.name,
+      address: [order.address.location, order.address.city, order.address.state, order.address.postalCode].join(', '),
+      country: order.country,
+      pricePerFrame: order.pricePerFrame,
+      noOfFrames: order.images.length,
+      discount: order.discount,
+      price: order.price
+    }
+    res.status(200).json(ResposneHandler(orderParams));
+  } catch (e) {
+    console.log('get order details error --->', JSON.stringify(e))
+    res.status(404).json({
+        error: new Error('Invalid request!')
+    });
+  }
+}

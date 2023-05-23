@@ -12,7 +12,8 @@ const ordersSchema = new mongoose.Schema({
     name: String,
     email: String,
     promoCode: String,
-    discount: Number
+    discount: Number,
+    pricePerFrame: Number
 },
 {
     timestamps: true
