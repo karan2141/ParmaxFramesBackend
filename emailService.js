@@ -55,7 +55,7 @@ export const sendOrderMail = (params) => {
         <div class="card" style="max-width: 1000px; font-family: Helvetica,Arial,sans-serif;line-height:2">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <img src="${FE_URL}/images/logo.jpg" alt="logo" style="height: 30px;">
-            <div>
+            <div style="text-align: end;">
               <h1 style="color: rgb(255, 94, 20); font-size: 20px; margin: 2px 0px;">Order Confirmation</h1>
               <p style="margin: 0px;">Order id: ${params.orderId}</p>
             </div>
