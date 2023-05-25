@@ -18,7 +18,7 @@ export const verifyEmail = async(req,res) => {
         } else {
             await User.updateOne({email}, {OTP})
         }
-        sendMail({ to: email, OTP })
+        await sendMail({ to: email, OTP })
         res.send(ResposneHandler({
             status: 200,
             message: 'Otp sent successfully'
