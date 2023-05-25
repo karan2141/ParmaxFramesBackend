@@ -10,9 +10,9 @@ const MAIL_SETTINGS = {
 }
 const transporter = nodemailer.createTransport(MAIL_SETTINGS);
 
-const sendMail = async (params) => {
+const sendMail = (params) => {
   try {
-    let info = await transporter.sendMail({
+    transporter.sendMail({
       from: MAIL_SETTINGS.auth.user,
       to: params.to, 
       subject: 'Parmax Frames Verify OTP',
@@ -38,7 +38,6 @@ const sendMail = async (params) => {
       </div>
     `,
     });
-    return info;
   } catch (error) {
     console.log(error);
     return false;
