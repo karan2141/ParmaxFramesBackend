@@ -78,7 +78,7 @@ export const sendOrderMail = (params) => {
         <hr>
         <div style="display: flex; justify-content: space-between;">
             <div>Price per Frame: </div>
-            <div>${params.pricePerFrame}</div>
+            <div>₹${params.pricePerFrame}</div>
         </div>
         <div style="display: flex; justify-content: space-between;">
             <div>No. of Frames: </div>
@@ -86,11 +86,11 @@ export const sendOrderMail = (params) => {
         </div>
         <div style="display: flex; justify-content: space-between;">
             <div>Price: </div>
-            <div>${params.price + params.discount}</div>
+            <div>₹${params.price + params.discount}</div>
         </div>
         <div style="display: flex; justify-content: space-between;">
             <div>Discount: </div>
-            <div>${params.discount}</div>
+            <div>₹${params.discount}</div>
         </div>
         <div style="display: flex; justify-content: space-between;">
             <div>Shipping: </div>
@@ -99,7 +99,7 @@ export const sendOrderMail = (params) => {
         <hr>
         <div style="display: flex; justify-content: space-between; font-weight: 600;">
             <div>Total: </div>
-            <div>${params.price}</div>
+            <div>₹${params.price}</div>
         </div>
         <hr style="border:none;border-top:1px solid #eee" />
         <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
