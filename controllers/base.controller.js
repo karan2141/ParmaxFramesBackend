@@ -44,7 +44,8 @@ export const saveOrder = async(req, res)=> {
             images: finalImages,
             userId,
             price,
-            paymentStatus: false
+            paymentStatus: false,
+            orderStatus: 'pending'
         })
         await order.save()
         await User.findByIdAndUpdate(userId, { $push: { orders: order._id} })

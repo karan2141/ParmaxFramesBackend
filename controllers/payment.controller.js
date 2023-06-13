@@ -35,6 +35,7 @@ export const checkout = async (req, res) => {
       userId: user._id,
       price: Number(amount)-Number(actualDiscount),
       paymentStatus: false,
+      orderStatus: 'pending',
       address,
       razorpayOrder: order,
       phone,

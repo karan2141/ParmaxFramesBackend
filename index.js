@@ -11,6 +11,7 @@ import { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } from './constants.js';
 import paymentRouter from './routes/paymentRoute.js';
 import Razorpay from 'razorpay'
 import DecryptRequest from './middleware/decryptReq.js';
+import adminRouter from './routes/adminRoute.js';
 
 connectMongoDb()
 
@@ -39,6 +40,7 @@ app.use("/payment", DecryptRequest, paymentRouter);
 app.use("/auth", DecryptRequest, googleRouter)
 app.use("/auth", DecryptRequest, facebookRouter)
 app.use("/auth", DecryptRequest, emailAuthRouter)
+app.use("/admin", DecryptRequest, adminRouter)
 app.use("", DecryptRequest, baseRouter)
 
 const port = process.env.PORT || 8080
