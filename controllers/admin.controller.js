@@ -97,3 +97,28 @@ export const setOrderStatus = async(req, res) => {
         }))
     }
 }
+
+export const getOrderImages = async(req, res) => {
+    try {
+        const { id } = req.body
+        const order = await Order.findById(id)
+        if( order ) {
+            const data = order.images
+            res.send(ResposneHandler({
+                status: 200,
+                message: 'Successfull',
+                data
+            }))
+        } else {
+            res.send(ResposneHandler({
+                status: 404,
+                message: 'Order Not Found'
+            }))
+        }
+    } catch (e) {
+        res.send(ResposneHandler({
+            status: 404,
+            message: 'Something went wrong'
+        }))
+    }
+}
