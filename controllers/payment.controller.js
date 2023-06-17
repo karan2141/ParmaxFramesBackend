@@ -98,6 +98,7 @@ export const paymentVerification = async (req, res) => {
         discount: order.discount,
         price: order.price
       }
+      
       sendOrderMail(orderParams)
 
       const attachments = order.images.map((img, i) => {
