@@ -35,25 +35,61 @@ export const login = async( req, res ) => {
 
 export const getOrders = async(req, res) => {
     try {
-        const orders = await Order.find({ paymentStatus: true }).sort({createdAt: -1})
-        const data = orders.map((order)=>{
+        const { pageNo, pageSize, status = null } = req.body
+        const totalCounts = await Order.find({ paymentStatus: true }).count()
+        const skipCount = (pageNo - 1) * pageSize;
+        let query = {
+            paymentStatus: true
+        }
+        if(status) query.orderStatus = status
+        const orders = await Order.find(query).sort({createdAt: -1}).skip(skipCount).limit(pageSize)
+        const orderData = orders.map((order)=>{
             return {
-                images: order.images,
+                // images: order.images,
+                id: order.id,
                 price: order.price,
                 paymentStatus: order.paymentStatus,
-                orderStatus: order.orderStatus,
+                orderStatus: order.orderStatus || 'pending',
                 createdAt: order.createdAt,
                 address: Object.keys(order.address).map((k)=> order.address[k]).join(", "),
                 orderId: order.razorpayOrder.id,
                 contactDetails: [order.name, order.phone, order.email].join(", "),
-                discount: order.discount
+                // discount: order.discount
             }
         })
         res.send(ResposneHandler({
             status: 200,
             message: 'Success',
-            data
+            data: {
+                orders: orderData,
+                totalData: totalCounts
+            }
         }))
+    } catch (e) {
+        res.send(ResposneHandler({
+            status: 404,
+            message: 'Something went wrong'
+        }))
+    }
+}
+
+export const setOrderStatus = async(req, res) => {
+    try {
+        const { id, status } = req.body
+        const order = await Order.findById(id)
+        if( order ) {
+            order.orderStatus = status
+            order.save()
+            res.send(ResposneHandler({
+                status: 200,
+                message: 'Successfull'
+            }))
+        } else {
+            res.send(ResposneHandler({
+                status: 404,
+                message: 'Order Not Found'
+            }))
+        }
     } catch (e) {
         res.send(ResposneHandler({
             status: 404,
