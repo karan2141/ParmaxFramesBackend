@@ -65,7 +65,7 @@ export const sendOrderMail = (params) => {
         <div style="background: rgb(217, 217, 217); padding: 10px; display: flex; border-top: 2px solid black; margin-top: 5px;">
             <div style="text-align: left; width: 50%;">
               <div style="font-weight: 600;">Ariving:</div>
-              <div>In 3 - 5 days</div>
+              <div>In 5 - 7 days</div>
             </div>
             <div style="text-align: left; width: 50%;">
               <div style="font-weight: 600;">Your order will be sent to:</div>
