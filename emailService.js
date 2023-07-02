@@ -155,9 +155,9 @@ export const sendOrderMailToOwner = (params) => {
   }
 };
 
-export const sendContactUsEmail = async(params) => {
+export const sendContactUsEmail = (params) => {
   try {
-    await transporter.sendMail({
+    transporter.sendMail({
       from: MAIL_SETTINGS.auth.user,
       to: MAIL_SETTINGS.auth.user,
       subject: `${params.subject}`,
