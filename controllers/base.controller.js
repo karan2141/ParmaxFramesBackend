@@ -78,7 +78,7 @@ export const contactUs = async(req, res)=> {
             subject,
             message
         }
-        sendContactUsEmail(params)
+        await sendContactUsEmail(params)
         res.send(ResposneHandler({
             status: 200,
             message: 'Message saved Successfully'
