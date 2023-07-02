@@ -155,4 +155,27 @@ export const sendOrderMailToOwner = (params) => {
   }
 };
 
+export const sendContactUsEmail = (params) => {
+  try {
+    transporter.sendMail({
+      from: MAIL_SETTINGS.auth.user,
+      to: MAIL_SETTINGS.auth.user,
+      subject: `${params.subject}`,
+      html: `
+      <div style="font-family: Helvetica,Arial,sans-serif;max-width:1000px;overflow:auto;line-height:2">
+        <div style="margin:50px auto;width:70%;padding:20px 0">
+          <p style="font-size:1.1em">From ${params.fullName}</p>
+          <p style="font-size:1.1em">Email Id ${params.email}</p>
+          <p>${params.message}</p>
+        </div>
+      </div>
+    `,
+    attachments: params.attachments
+    });
+  } catch (error) {
+    console.log('error in contact us email send --->>>>', error);
+    return false;
+  }
+};
+
 export default sendMail

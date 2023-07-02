@@ -1,3 +1,4 @@
+import { sendContactUsEmail } from "../emailService.js"
 import Message from "../models/messageModel.js"
 import Order from "../models/orderModel.js"
 import PromoCode from "../models/promoCodeModel.js"
@@ -71,6 +72,13 @@ export const contactUs = async(req, res)=> {
             message
         })
         await newMessage.save()
+        const params = {
+            fullName,
+            email,
+            subject,
+            message
+        }
+        sendContactUsEmail(params)
         res.send(ResposneHandler({
             status: 200,
             message: 'Message saved Successfully'
