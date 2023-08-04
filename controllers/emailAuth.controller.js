@@ -68,3 +68,28 @@ export const verifyOtp = async(req,res)=>{
         res.status(500).end();
     }
 }
+
+export const deleteData = async(req,res)=>{
+    try {
+        const { email } = req.body
+        const existing = await User.findOne({ email })
+        if (existing) {
+            existing.facebookData = null
+            existing.googleData = null
+            await existing.save()
+            res.send(ResposneHandler({
+                status: 200,
+                message: 'Data deleted successfully',
+            }))
+        } else {
+            res.send(ResposneHandler({
+                status: 404,
+                message: 'Email does not exists'
+            }))
+        }
+    } catch(e) {
+        console.log(e);
+        res.statusMessage = "Something went wrong";
+        res.status(500).end();
+    }
+}
