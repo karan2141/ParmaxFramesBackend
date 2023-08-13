@@ -3,6 +3,7 @@ import { JwtExpireInMin, JwtSecret } from "../constants.js";
 import Admin from "../models/adminModel.js";
 import { ResposneHandler } from "../utils.js";
 import Order from '../models/orderModel.js';
+import User from '../models/userModel.js';
 
 export const login = async( req, res ) => {
     try {
@@ -115,6 +116,34 @@ export const getOrderImages = async(req, res) => {
                 message: 'Order Not Found'
             }))
         }
+    } catch (e) {
+        res.send(ResposneHandler({
+            status: 404,
+            message: 'Something went wrong'
+        }))
+    }
+}
+
+export const getUsers = async(req, res) => {
+    try {
+        const { pageNo, pageSize } = req.body
+        const totalCounts = await User.find({}).count()
+        const skipCount = (pageNo - 1) * pageSize;
+        let query = {}
+        const users = await User.find(query).sort({createdAt: -1}).skip(skipCount).limit(pageSize)
+        const userData = users.map((user)=>{
+            return {
+                email: user.email
+            }
+        })
+        res.send(ResposneHandler({
+            status: 200,
+            message: 'Success',
+            data: {
+                users: userData,
+                totalData: totalCounts
+            }
+        }))
     } catch (e) {
         res.send(ResposneHandler({
             status: 404,
