@@ -34,9 +34,10 @@ export const google = async(req,res)=>{
 export const mobilegoogle = async(req,res)=>{
     try {
         const { isSuccess, idToken, type } = req.body
+        console.log('here1')
         const response = await axios.post(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`);
         const userInfo = response.data;
-
+        console.log('here2')
         const user = await User.findOneAndUpdate({ email: userInfo.email }, {googleData: userInfo, loggedInBy: 'google'}, {
             new: true,
             upsert: true
