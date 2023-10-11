@@ -2,6 +2,8 @@ import Jwt from 'jsonwebtoken'
 import { JwtExpireInMin, JwtSecret } from "../constants.js";
 import User from "../models/userModel.js";
 import { ResposneHandler } from "../utils.js"
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 export const google = async(req,res)=>{
     try {
@@ -34,17 +36,22 @@ export const google = async(req,res)=>{
 export const mobilegoogle = async(req,res)=>{
     try {
         const { isSuccess, idToken, type } = req.body
-        const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
-        headers: {
-            Authorization: `Bearer ${idToken}`,
-        },
+        console.log('here1');
+        const ticket = await client.verifyIdToken({
+            idToken: idToken,
+            audience: process.env.GOOGLE_CLIENT_ID
         });
-        const userInfo = response.data;
+        console.log('here2');
+        const payload = ticket.getPayload();
+        // const userId = payload.sub;
+        const userEmail = payload.email;
+        // const userName = payload.name;
 
-        const user = await User.findOneAndUpdate({ email: userInfo.email }, {googleData: userInfo, loggedInBy: 'google'}, {
+        const user = await User.findOneAndUpdate({ email: userEmail }, {googleData: payload, loggedInBy: 'google'}, {
             new: true,
             upsert: true
         })
+        console.log('here3');
         const token = Jwt.sign({ userId: user.id}, JwtSecret, {
             expiresIn: JwtExpireInMin*60
         })
@@ -53,8 +60,8 @@ export const mobilegoogle = async(req,res)=>{
             status: 200,
             message: 'Logged in Successfully',
             data: {
-                email: userInfo.email,
-                profilePic: userInfo.picture,
+                email: userEmail,
+                profilePic: payload.picture,
                 token
             }
         }))
