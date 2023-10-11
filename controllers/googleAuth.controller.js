@@ -36,7 +36,7 @@ export const google = async(req,res)=>{
 export const mobilegoogle = async(req,res)=>{
     try {
         const { isSuccess, idToken, type } = req.body
-        console.log('here1');
+        console.log('here1', isSuccess, idToken);
         const ticket = await client.verifyIdToken({
             idToken: idToken,
             audience: process.env.GOOGLE_CLIENT_ID
