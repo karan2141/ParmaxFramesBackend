@@ -2,7 +2,7 @@ import Jwt from 'jsonwebtoken'
 import { JwtExpireInMin, JwtSecret } from "../constants.js";
 import User from "../models/userModel.js";
 import { ResposneHandler } from "../utils.js"
-const { OAuth2Client } = require('google-auth-library');
+import { OAuth2Client } from 'google-auth-library';
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 export const google = async(req,res)=>{
