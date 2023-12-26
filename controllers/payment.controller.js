@@ -14,7 +14,7 @@ export const checkout = async (req, res) => {
     let actualDiscount
     try {
       const result = await PromoCode.findOne({ code: promoCode })
-      actualDiscount = result.discount
+      actualDiscount = Math.round(amount*(result.discount/100))
     } catch {
       actualDiscount = 0
     }
