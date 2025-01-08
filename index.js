@@ -49,3 +49,7 @@ const port = process.env.PORT || 8080
 app.listen(port, ()=>{
     console.log(chalk.green(`server started on port ${port}`));
 })
+
+export default (req, res) => {
+    app(req, res); // Call the Express app as a function
+  };
